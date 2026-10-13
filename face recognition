@@ -1,0 +1,55 @@
+import cv2
+import mediapipe as mp
+
+cap = cv2.VideoCapture(0)
+mp_face = mp.solutions.face_detection
+
+with mp_face.FaceDetection(
+    model_selection=0,
+    min_detection_confidence=0.6
+) as detector:
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = detector.process(rgb)
+
+        if results.detections:
+            h, w, _ = frame.shape
+
+            for face in results.detections:
+                box = face.location_data.relative_bounding_box
+
+                x = max(0, int(box.xmin * w))
+                y = max(0, int(box.ymin * h))
+                bw = int(box.width * w)
+                bh = int(box.height * h)
+
+                cv2.rectangle(
+                    frame,
+                    (x, y),
+                    (min(x + bw, w - 1), min(y + bh, h - 1)),
+                    (0, 255, 0),
+                    2
+                )
+
+                cv2.putText(
+                    frame,
+                    f"Face {face.score[0]:.2f}",
+                    (x, max(y - 10, 25)),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7,
+                    (0, 255, 0),
+                    2
+                )
+
+        cv2.imshow("Face Tracking", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+
+cap.release()
+cv2.destroyAllWindows()
