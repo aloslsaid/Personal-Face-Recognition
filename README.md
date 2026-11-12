@@ -12,7 +12,7 @@ A browser-based face-detection and face-descriptor matching experiment built wit
 
 ## Requirements
 
-- Node.js 20+ and npm.
+- Node.js 20.19+ or 22.12+ (required by Vite 8) and npm.
 - A browser with camera support.
 - Camera permission and a secure context: `localhost` or HTTPS.
 
