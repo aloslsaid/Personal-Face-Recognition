@@ -427,6 +427,14 @@ function App() {
     setRegisterMessage("تم حذف تسجيل الشخص.");
   }, []);
 
+  const deleteAllPeople = useCallback(() => {
+    if (!window.confirm("هل تريد حذف جميع بصمات الوجوه المخزنة في هذا المتصفح؟")) {
+      return;
+    }
+    setPeople([]);
+    setRegisterMessage("تم حذف جميع التسجيلات المحلية.");
+  }, []);
+
   return (
     <main className="vision-app" dir="rtl">
       <header className="topbar">
@@ -544,6 +552,11 @@ function App() {
             <div className="registered-heading">
               <h3>الأشخاص المسجلون</h3>
               <span>{people.length}</span>
+              {people.length > 0 && (
+                <button className="delete-person-button" onClick={deleteAllPeople}>
+                  حذف الكل
+                </button>
+              )}
             </div>
 
             {people.length === 0 ? (
