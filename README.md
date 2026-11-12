@@ -1,75 +1,31 @@
-# React + TypeScript + Vite
-https://charming-narwhal-51e1eb.netlify.app
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Personal Face Recognition
 
-Currently, two official plugins are available:
+A browser-based face-detection and recognition experiment built with React, TypeScript, Vite, and `@vladmandic/face-api`. The interface requests camera access, detects faces, and can compare face descriptors against registrations stored in the browser's local storage.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Setup
 
-## React Compiler
+Requirements: Node.js and npm.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Open the Vite URL. Camera access generally requires `localhost` or HTTPS and explicit browser permission. Build and lint with:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm run build
+npm run lint
 ```
+
+## Model files
+
+The application loads face-api model files from `/models` (`tinyFaceDetector`, `faceLandmark68TinyNet`, and `faceRecognitionNet`). The repository root listing does not contain a `public/models` directory, so add the compatible model weights to that location from a source whose license permits your use before expecting recognition to work. Do not download unknown model files or scripts.
+
+## Privacy and responsible use
+
+Camera video is processed in the browser by this application. Face descriptors and names are saved in that browser's local storage and persist until removed or browser storage is cleared. They are sensitive biometric data: register people only with informed consent, avoid shared devices, provide a deletion process, and do not use this experiment for consequential decisions or identity verification. Recognition can be inaccurate and biased.
+
+## Tests and limitations
+
+No test script is defined in `package.json`. Use `npm run build` and `npm run lint` as available static checks; they do not prove recognition accuracy. Model weights, supported browsers, and threshold calibration should be documented and tested before any wider use.
