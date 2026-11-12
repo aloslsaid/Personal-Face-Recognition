@@ -434,7 +434,7 @@ function App() {
           <div className="brand-logo">V</div>
           <div>
             <h1>Personal Vision AI</h1>
-            <p>منصة علوش السيد ي</p>
+            <p>منصة رؤية شخصية مدعومة بالذكاء الاصطناعي</p>
           </div>
         </div>
 
@@ -450,7 +450,7 @@ function App() {
 
       <section className="welcome">
         <span className="eyebrow">COMPUTER VISION PLATFORM</span>
-        <h2>رؤية صدام حسين ق.</h2>
+        <h2>رؤية ذكية. تعرّف لحظي على الوجوه</h2>
         <p>
           منصة لتشغيل نماذج تعلم الآلة وتحليل الفيديو والتعرف على الأشخاص
           المسجلين محلياً.
