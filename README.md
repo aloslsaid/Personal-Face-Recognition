@@ -34,3 +34,6 @@ No test script is defined in `package.json`. Use `npm run build` and `npm run li
 ## Biometric data privacy
 
 Face descriptors and names are stored in browser `localStorage`, which is not encrypted and is accessible to scripts running on the same origin. Use only with the subject's informed consent. The interface provides per-person deletion and a delete-all control. This is a local demonstration, not a secure biometric identity system; do not deploy it for access control or consequential identification.
+
+
+The latest CI workflow builds the frontend and records the dependency-audit report as a review artifact. Face model weight files remain intentionally external and are not fabricated in this repository.
