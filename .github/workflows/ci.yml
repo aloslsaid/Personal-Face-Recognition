@@ -1,0 +1,34 @@
+name: Frontend build and dependency audit
+
+on:
+  pull_request:
+  push:
+    branches: [docs/model-assets]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install
+      - name: Apply non-breaking dependency security updates
+        run: npm audit fix || true
+      - name: Report remaining dependency advisories
+        run: |
+          npm audit --json > audit.json || true
+          node -e "const a=require('./audit.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities ?? {}, null, 2))"
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-security-review
+          path: |
+            package-lock.json
+            audit.json
+          if-no-files-found: ignore
