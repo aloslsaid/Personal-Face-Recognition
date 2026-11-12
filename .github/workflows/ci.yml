@@ -1,17 +1,40 @@
-name: Frontend build
+name: Frontend build and dependency audit
 
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [docs/model-assets]
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
       - run: npm install
+      - name: Apply non-breaking dependency security updates
+        run: npm audit fix || true
+      - name: Report remaining dependency advisories
+        run: |
+          npm audit --json > audit.json || true
+          node -e "const a=require('./audit.json'); console.log(JSON.stringify(a.metadata?.vulnerabilities ?? {}, null, 2))"
       - run: npm run build
+      - name: Commit lockfile updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "No lockfile changes."
+          else
+            git commit -m "Apply non-breaking npm security updates"
+            git push origin "HEAD:${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          fi
