@@ -1,31 +1,61 @@
-# Personal Face Recognition
+# Personal Face Recognition — Real-Time Browser Vision
 
-A browser-based face-detection and recognition experiment built with React, TypeScript, Vite, and `@vladmandic/face-api`. The interface requests camera access, detects faces, and can compare face descriptors against registrations stored in the browser's local storage.
+> A browser-based computer-vision application for live face detection, face descriptor extraction, and matching against locally registered people.
 
-## Setup
+## Overview
+Personal Face Recognition turns a camera stream into a live visual recognition workspace. The React interface requests camera permission, detects visible faces, draws the detection results, extracts numerical face descriptors, and compares them with descriptors saved for previously registered people.
 
-Requirements: Node.js and npm.
+## Core capabilities
+- Live camera access through the browser.
+- Multi-face detection in a camera frame.
+- Face landmark estimation.
+- Face descriptor generation using the recognition network.
+- Registration of a person's name and face descriptor.
+- Matching new detections against saved registrations using Euclidean descriptor distance and a configurable threshold.
+- Local persistence of registered names and descriptors using browser `localStorage`.
+- Live detection loop throttled to approximately eight recognition passes per second to reduce unnecessary work.
+- React state management for camera status, model loading, registration feedback, and errors.
 
-```sh
+## Technology stack
+- React 19 and TypeScript
+- Vite
+- `@vladmandic/face-api`
+- MediaPipe Tasks Vision dependency
+- Browser MediaDevices / camera APIs
+- Canvas rendering and localStorage
+
+## Requirements
+- Node.js and npm.
+- A modern browser with camera access.
+- The compatible face-api model weight files required by the application.
+
+## Installation
+```bash
+git clone https://github.com/aloslsaid/Personal-Face-Recognition.git
+cd Personal-Face-Recognition
 npm install
+```
+
+## Model weights
+At startup, the app loads the Tiny Face Detector, Tiny 68-point Landmark Network, and Face Recognition Network from `/models`. Place the compatible model files in `public/models` before expecting detection and recognition to initialize. The repository tree does not currently include that model directory. Use model files only from a trusted source and check their licenses.
+
+## Run and build
+```bash
 npm run dev
 ```
-
-Open the Vite URL. Camera access generally requires `localhost` or HTTPS and explicit browser permission. Build and lint with:
-
-```sh
+Open the local Vite URL and grant camera permission. For a production build:
+```bash
 npm run build
 npm run lint
+npm run preview
 ```
+Camera access generally requires localhost or HTTPS.
 
-## Model files
+## How matching works
+A face descriptor is a fixed-length numerical representation of facial appearance. The app calculates Euclidean distance between a detected descriptor and saved descriptors; a smaller distance indicates a closer descriptor match. The current matching threshold is defined in the source and should be calibrated with representative test images rather than treated as a universal identity boundary.
 
-The application loads face-api model files from `/models` (`tinyFaceDetector`, `faceLandmark68TinyNet`, and `faceRecognitionNet`). The repository root listing does not contain a `public/models` directory, so add the compatible model weights to that location from a source whose license permits your use before expecting recognition to work. Do not download unknown model files or scripts.
+## Privacy and limitations
+Face descriptors and names are biometric information. This implementation stores registrations in the current browser's local storage; they are not automatically synchronized to a secure account. Use only with informed consent, protect shared devices, and delete registrations when no longer needed. Lighting, camera quality, pose, occlusion, model weights, and threshold selection can all affect accuracy. This is an experimental recognition application, not a secure identity-verification or surveillance system.
 
-## Privacy and responsible use
-
-Camera video is processed in the browser by this application. Face descriptors and names are saved in that browser's local storage and persist until removed or browser storage is cleared. They are sensitive biometric data: register people only with informed consent, avoid shared devices, provide a deletion process, and do not use this experiment for consequential decisions or identity verification. Recognition can be inaccurate and biased.
-
-## Tests and limitations
-
-No test script is defined in `package.json`. Use `npm run build` and `npm run lint` as available static checks; they do not prove recognition accuracy. Model weights, supported browsers, and threshold calibration should be documented and tested before any wider use.
+## Skills demonstrated
+Computer vision · Real-time browser processing · Face detection · Landmark estimation · Embedding similarity · TypeScript · React · Client-side data persistence
